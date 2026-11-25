@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ASCII Bahçe</title>
+  <meta name="description" content="Fotoğrafını renkli ASCII koduna dönüştür. Tamamen tarayıcıda çalışır, fotoğrafın hiçbir yere yüklenmez.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23000080'/><text x='16' y='23' font-family='monospace' font-weight='700' font-size='20' fill='white' text-anchor='middle'>@</text></svg>">
+</head>
+<body>
+  <section class="hero">
+    <h1>Fotoğrafını<br>koda dönüştür.</h1>
+    <p>Bir çiçek, bir portre ya da herhangi bir kare. Her piksel, kendi renginde bir karaktere dönüşür.</p>
+  </section>
+
+  <main class="workspace">
+    <section class="stage">
+      <div id="drop" class="canvas-wrap">
+        <canvas id="out" aria-label="ASCII çıktısı"></canvas>
+        <div class="drop-hint">Bırak, dönüştürelim</div>
+      </div>
+      <div class="toolbar">
+        <button id="btnAnim" class="btn btn-primary">Animasyonu oynat</button>
+        <div class="toolbar-right">
+          <button id="btnPng" class="btn">PNG indir</button>
+        </div>
+      </div>
+
+      <div class="code-card">
+        <div class="code-head">
+          <div>
+            <h2>Kodu al</h2>
+            <p id="codeHint" class="code-hint"></p>
+          </div>
+          <div class="seg seg-2" id="codeTabs">
+            <button type="button" data-lang="py" class="on">Python</button>
+            <button type="button" data-lang="html">HTML</button>
+          </div>
+        </div>
+        <pre class="code-view"><code id="codeView"></code></pre>
+        <div class="code-actions">
+          <button id="btnCodeCopy" class="btn btn-primary">Kodu kopyala</button>
+          <button id="btnCodeDl" class="btn">Dosya olarak indir</button>
+          <span id="codeSize" class="code-size"></span>
+        </div>
+      </div>
+    </section>
+
+    <aside class="controls">
+      <label class="upload">
+        <input id="file" type="file" accept="image/*">
+        <span class="upload-title">Fotoğraf seç</span>
+        <span class="upload-sub">ya da buraya sürükle · Ctrl+V</span>
+      </label>
+
+      <fieldset class="field">
+        <legend>Renk</legend>
+        <input id="mode" type="hidden" value="renkli">
+        <div class="seg" data-for="mode">
+          <button type="button" data-value="renkli" class="on">Orijinal</button>
+          <button type="button" data-value="matrix">Yeşil</button>
+          <button type="button" data-value="amber">Amber</button>
+          <button type="button" data-value="beyaz">Beyaz</button>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="ramp">Karakter seti</label>
+        <select id="ramp">
+          <option value="klasik">Klasik — 70 karakter</option>
+          <option value="basit">Sade — .:-=+*#%@</option>
+          <option value="harf">Harfler</option>
+          <option value="blok">Bloklar — ░▒▓█</option>
+          <option value="binary">İkili — 0 1</option>
+          <option value="ozel">Kendi karakterlerim</option>
+        </select>
+        <input id="custom" type="text" placeholder="koyudan açığa, ör.  .oO@" hidden>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field">
+        <label for="cols">Detay <output id="colsV"></output></label>
+        <input id="cols" type="range" min="40" max="300" step="2" value="140">
+      </div>
+      <div class="field">
+        <label for="sat">Doygunluk <output id="satV"></output></label>
+        <input id="sat" type="range" min="0" max="3" step="0.05" value="1.4">
+      </div>
+      <div class="field">
+        <label for="boost">Parlaklık <output id="boostV"></output></label>
+        <input id="boost" type="range" min="0.5" max="3" step="0.05" value="1.5">
+      </div>
+      <div class="field">
+        <label for="contrast">Kontrast <output id="contrastV"></output></label>
+        <input id="contrast" type="range" min="0.5" max="2.5" step="0.05" value="1.2">
+      </div>
+
+      <details class="more">
+        <summary>Gelişmiş</summary>
+        <div class="field">
+          <label for="cut">Arka plan eşiği <output id="cutV"></output></label>
+          <input id="cut" type="range" min="0" max="0.6" step="0.01" value="0.06">
+        </div>
+        <div class="field">
+          <label for="edges">Kenar çizgileri <output id="edgesV"></output></label>
+          <input id="edges" type="range" min="0" max="1" step="0.05" value="0.35">
+        </div>
+        <div class="field">
+          <label for="font">Çıktı çözünürlüğü <output id="fontV"></output></label>
+          <input id="font" type="range" min="6" max="20" step="1" value="10">
+        </div>
+        <div class="field inline">
+          <label class="check"><input id="invert" type="checkbox"><span>Ters çevir</span></label>
+          <label class="swatch"><span>Zemin</span><input id="bg" type="color" value="#000080"></label>
+        </div>
+      </details>
+    </aside>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
